@@ -1,17 +1,37 @@
 import * as dotenv from "dotenv";
 
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, subtask, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-ethers";
 
 dotenv.config();
 
+import { deployBookLibrary } from "./scripts/deploy";
+
+task(
+  "deploy-book-library",
+  "Deploy the contract to a specified network"
+).setAction(async (_, hre, runSuper) => {
+  await deployBookLibrary(hre);
+});
+
+subtask("print", "Prints a message")
+  .addParam("message", "The message to print")
+  .setAction(async (taskArgs, hre, runSuper) => {
+    console.log(taskArgs.message);
+  });
+
 const config: HardhatUserConfig = {
   networks: {
     localhost: {},
-    matic: {
+    mumbai: {
       url: process.env.MUMBAI_RPC_URL,
       accounts: [process.env.PRIVATE_KEY as string],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      polygonMumbai: process.env.POLYSCAN || "",
     },
   },
   solidity: {
