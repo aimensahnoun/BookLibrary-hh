@@ -52,6 +52,7 @@ contract BookLibrary is Ownable {
 
         bookList.push(Book(_name, _count));
         bookCount++;
+        emit BookAdded(bookCount - 1, _name, _count);
     }
 
     function borrowBook(uint256 _id) public doesBookExist(_id) {
@@ -67,6 +68,7 @@ contract BookLibrary is Ownable {
         bookReceipts.push(
             BookReceipt(msg.sender, selectedBook.name, block.timestamp)
         );
+        emit BookBorrowed(_id, msg.sender);
     }
 
     function returnBook(uint256 _id) public {
@@ -74,6 +76,7 @@ contract BookLibrary is Ownable {
             revert BookLibrary__BookNotBorrowed();
         bookList[_id].count++;
         doesUserHaveBook[getUserBookId(msg.sender, _id)] = false;
+        emit BookReturned(_id, msg.sender);
     }
 
     function checkBorrower(uint256 _id)
