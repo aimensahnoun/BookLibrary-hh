@@ -40,6 +40,7 @@ contract BookLibrary is Ownable {
     mapping(string => bool) doesUserHaveBook;
 
     modifier doesBookExist(uint256 _id) {
+        if (bookCount == 0) revert BookLibrary__BookIdOutOfRange();
         if (_id > bookCount - 1) revert BookLibrary__BookIdOutOfRange();
         _;
     }
@@ -77,6 +78,15 @@ contract BookLibrary is Ownable {
         bookList[_id].count++;
         doesUserHaveBook[getUserBookId(msg.sender, _id)] = false;
         emit BookReturned(_id, msg.sender);
+    }
+
+    function getBookById(uint256 _id)
+        public
+        view
+        doesBookExist(_id)
+        returns (Book memory)
+    {
+        return (bookList[_id]);
     }
 
     function checkBorrower(uint256 _id)

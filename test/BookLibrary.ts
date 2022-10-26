@@ -129,4 +129,23 @@ describe("Testing Book Library Contract", function () {
       expect(books[1].bookName).to.equal("Book2");
     });
   });
+
+  describe("Getting a book by id", () => {
+    it("Should revert if a book doest exist", async () => {
+      await expect(bookLibrary.getBookById(0)).to.be.revertedWithCustomError(
+        bookLibrary,
+        "BookLibrary__BookIdOutOfRange"
+      );
+    });
+
+    it("Should return the correct book", async () => {
+      await bookLibrary.addBook("Book1", 100);
+      await bookLibrary.addBook("Book2", 100);
+      await bookLibrary.addBook("Book3", 100);
+
+      const book = await bookLibrary.getBookById(1);
+
+      expect(book.name).to.equal("Book2");
+    });
+  });
 });

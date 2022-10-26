@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { HardhatUserConfig, subtask, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-ethers";
+import "@nomiclabs/hardhat-etherscan";
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ task(
   "deploy-book-library",
   "Deploy the contract to a specified network"
 ).setAction(async (_, hre, runSuper) => {
-  await deployBookLibrary(hre);
+  const address = await deployBookLibrary(hre);
 });
 
 subtask("print", "Prints a message")
@@ -23,10 +24,13 @@ subtask("print", "Prints a message")
 
 const config: HardhatUserConfig = {
   networks: {
-    localhost: {},
+    localhost: {
+      allowUnlimitedContractSize: true,
+    },
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,
       accounts: [process.env.PRIVATE_KEY as string],
+      allowUnlimitedContractSize: true,
     },
   },
   etherscan: {

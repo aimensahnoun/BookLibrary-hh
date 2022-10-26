@@ -12,6 +12,3 @@ export async function deployBookLibrary(hre: HardhatRuntimeEnvironment) {
     message: `BookLibrary deployed to: ${bookLibraryAddress}`,
   });
 }
-
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
